@@ -92,3 +92,22 @@ A Refund where the money couldn't be sent. The Refund Request stays approved, be
 **Watch Limit**:
 The amount of Watched time on a course past which a Student can no longer get a Refund, because they've had the course.
 _Avoid_: Watch cap, Viewing threshold
+
+### Questions
+
+**Question**:
+A Student's top-level comment on a lesson, asking the course's voice for help. Distinct from a quiz question.
+_Avoid_: Comment (for a Question specifically), Query, Quiz question
+
+**Unanswered Question**:
+A Question no Instructor or Platform Admin has replied to yet.
+_Avoid_: Open question, Pending question
+
+**Answered Question**:
+A Question an Instructor or Platform Admin has replied to, speaking as the course's voice.
+
+### Notifications
+
+**Notification**:
+A message telling one Student, Instructor, Platform Admin, or Team Admin about something in Cadence they must act on or that materially affects them. A Notification has exactly one recipient.
+_Avoid_: Alert, Message, Alarm
