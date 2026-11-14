@@ -1,0 +1,141 @@
+<!doctype html>
+<!--
+  PROTOTYPE — throwaway. Wayfinder ticket #8 "Draft the email content for each notification type".
+  Double-click to open in a browser. No build, no deps.
+  Each block below is one notification email and maps 1:1 to a React Email component
+  that would later live under app/lib/email/ (authored per the Resend decision, issue #3).
+  The grey chrome bar shows the SUBJECT LINE; the footnote strip shows recipient / channel / CTA target.
+  Copy uses {{placeholders}} for the data the send would interpolate.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Cadence notification emails — prototype</title>
+<style>
+  :root { --ink:#1b1b21; --muted:#6b6b76; --line:#e6e6ec; --brand:#4f3ff0; --brandink:#fff; --bg:#f3f3f7; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:var(--ink); }
+  .page { max-width:720px; margin:0 auto; padding:32px 20px 80px; }
+  h1.pagetitle { font-size:20px; margin:0 0 4px; }
+  p.pagesub { color:var(--muted); margin:0 0 28px; font-size:14px; }
+  .mail { background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden; margin:0 0 30px; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .chrome { background:#fafafc; border-bottom:1px solid var(--line); padding:12px 20px; font-size:13px; }
+  .chrome .lbl { color:var(--muted); }
+  .chrome .subj { font-weight:600; }
+  .body { padding:28px 32px 8px; }
+  .logo { font-weight:800; letter-spacing:-.02em; font-size:18px; color:var(--brand); margin:0 0 20px; }
+  .body h2 { font-size:19px; margin:0 0 14px; line-height:1.3; }
+  .body p { font-size:15px; line-height:1.6; margin:0 0 14px; color:#33333c; }
+  .amount { font-weight:700; }
+  .quote { border-left:3px solid var(--line); padding:4px 0 4px 14px; color:var(--muted); font-style:italic; margin:0 0 14px; }
+  .cta { display:inline-block; background:var(--brand); color:var(--brandink); text-decoration:none; font-weight:600; font-size:15px; padding:12px 22px; border-radius:8px; margin:6px 0 18px; }
+  .sign { font-size:15px; color:#33333c; margin:0 0 6px; }
+  .foot { border-top:1px solid var(--line); padding:14px 32px 22px; font-size:12px; color:var(--muted); line-height:1.5; }
+  .foot a { color:var(--muted); }
+  .meta { background:#111218; color:#c9c9d4; font-size:12px; padding:10px 32px; display:flex; flex-wrap:wrap; gap:6px 18px; }
+  .meta b { color:#fff; font-weight:600; }
+  .tag { background:#2a2a35; color:#fff; border-radius:4px; padding:1px 7px; font-size:11px; }
+  .tag.tx { background:#7a4; }
+  .tag.optin { background:#a65; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1 class="pagetitle">Cadence — notification email drafts</h1>
+  <p class="pagesub">Six emails. Read for subject, voice, and call-to-action. The dark strip under each is annotation, not part of the email.</p>
+
+  <!-- ============ 1. Refund Request opened → Platform Admin ============ -->
+  <div class="mail">
+    <div class="chrome"><span class="lbl">Subject:&nbsp;</span><span class="subj">Refund request to review — {{courseTitle}}</span></div>
+    <div class="body">
+      <p class="logo">Cadence</p>
+      <h2>A buyer has asked for a refund</h2>
+      <p>{{buyerName}} has requested a refund of <span class="amount">{{amount}}</span> for <strong>{{courseTitle}}</strong>. It’s waiting on a decision and no other admin has picked it up yet.</p>
+      <p>Their reason:</p>
+      <p class="quote">“{{refundReason}}”</p>
+      <a class="cta" href="https://cadence.app/admin/refunds">Review the request</a>
+      <p>Approving ends what the purchase granted and issues the full amount. Declining leaves their access untouched.</p>
+    </div>
+    <div class="foot">You’re receiving this because you’re a Platform Admin on Cadence.</div>
+    <div class="meta"><span><b>To:</b> Platform Admin</span><span><b>CTA:</b> /admin/refunds</span><span class="tag">tunable email</span></div>
+  </div>
+
+  <!-- ============ 2. Refund approved → buyer (Transactional) ============ -->
+  <div class="mail">
+    <div class="chrome"><span class="lbl">Subject:&nbsp;</span><span class="subj">Your refund for {{courseTitle}} is on its way</span></div>
+    <div class="body">
+      <p class="logo">Cadence</p>
+      <h2>Refund approved</h2>
+      <p>Hi {{buyerName}}, we’ve approved your refund for <strong>{{courseTitle}}</strong>. You’ll get back the full <span class="amount">{{amount}}</span> you paid, returned to your original payment method. It can take a few days to land, depending on your bank.</p>
+      <p>Your enrollment on this course has now ended, so it’s no longer in your library. Any progress you’d made is kept, in case you come back to it later.</p>
+      <a class="cta" href="https://cadence.app/courses">Browse your courses</a>
+      <p class="sign">Thanks for giving it a try,<br/>The Cadence team</p>
+    </div>
+    <div class="foot">This is a receipt for a refund on your account, so it’s sent even if you’ve muted Cadence emails.</div>
+    <div class="meta"><span><b>To:</b> Buyer</span><span><b>CTA:</b> /courses</span><span class="tag tx">Transactional · always sends</span></div>
+  </div>
+
+  <!-- ============ 3. Refund declined → buyer (Transactional) ============ -->
+  <div class="mail">
+    <div class="chrome"><span class="lbl">Subject:&nbsp;</span><span class="subj">An update on your refund request for {{courseTitle}}</span></div>
+    <div class="body">
+      <p class="logo">Cadence</p>
+      <h2>We couldn’t approve this refund</h2>
+      <p>Hi {{buyerName}}, we’ve reviewed your refund request for <strong>{{courseTitle}}</strong> and weren’t able to approve it this time. No money has been returned, and nothing has changed about your access — the course is still yours and all your progress is intact.</p>
+      <p>Here’s why:</p>
+      <p class="quote">“{{declineReason}}”</p>
+      <p>If something’s changed or you think we’ve got this wrong, you’re welcome to raise a new request.</p>
+      <a class="cta" href="https://cadence.app/courses/{{courseSlug}}">Go to {{courseTitle}}</a>
+      <p class="sign">The Cadence team</p>
+    </div>
+    <div class="foot">This confirms the outcome of a refund request on your account, so it’s sent even if you’ve muted Cadence emails.</div>
+    <div class="meta"><span><b>To:</b> Buyer</span><span><b>CTA:</b> /courses/:slug</span><span class="tag tx">Transactional · always sends</span></div>
+  </div>
+
+  <!-- ============ 4. New enrollment → Instructor (opt-in, default off) ============ -->
+  <div class="mail">
+    <div class="chrome"><span class="lbl">Subject:&nbsp;</span><span class="subj">New student on {{courseTitle}}</span></div>
+    <div class="body">
+      <p class="logo">Cadence</p>
+      <h2>Someone just enrolled 🎉</h2>
+      <p>{{studentName}} has enrolled in <strong>{{courseTitle}}</strong>. That’s {{enrollmentCount}} students taking it now.</p>
+      <a class="cta" href="https://cadence.app/instructor/{{courseId}}/students">See your students</a>
+      <p class="sign">Keep it up,<br/>The Cadence team</p>
+    </div>
+    <div class="foot">You’re getting this because you turned on email for new enrollments. <a href="https://cadence.app/settings">Change that in settings.</a></div>
+    <div class="meta"><span><b>To:</b> Instructor</span><span><b>CTA:</b> /instructor/:courseId/students</span><span class="tag optin">email default OFF · opt-in</span></div>
+  </div>
+
+  <!-- ============ 5. Question posted → Instructor ============ -->
+  <div class="mail">
+    <div class="chrome"><span class="lbl">Subject:&nbsp;</span><span class="subj">New question on {{courseTitle}}</span></div>
+    <div class="body">
+      <p class="logo">Cadence</p>
+      <h2>A student’s waiting on an answer</h2>
+      <p>{{studentName}} asked a question on <strong>{{lessonTitle}}</strong> in {{courseTitle}}:</p>
+      <p class="quote">“{{questionExcerpt}}”</p>
+      <a class="cta" href="https://cadence.app/instructor/questions">Answer the question</a>
+      <p class="sign">The Cadence team</p>
+    </div>
+    <div class="foot">You’re receiving this as the instructor for {{courseTitle}}. <a href="https://cadence.app/settings">Manage email notifications.</a></div>
+    <div class="meta"><span><b>To:</b> Instructor</span><span><b>CTA:</b> /instructor/questions</span><span class="tag">tunable email</span></div>
+  </div>
+
+  <!-- ============ 6. Question answered → asking Student ============ -->
+  <div class="mail">
+    <div class="chrome"><span class="lbl">Subject:&nbsp;</span><span class="subj">Your question on {{courseTitle}} has an answer</span></div>
+    <div class="body">
+      <p class="logo">Cadence</p>
+      <h2>You’ve got an answer</h2>
+      <p>Hi {{studentName}}, the course answered your question on <strong>{{lessonTitle}}</strong>:</p>
+      <p class="quote">“{{answerExcerpt}}”</p>
+      <a class="cta" href="https://cadence.app/courses/{{courseSlug}}/lessons/{{lessonId}}">Read the full answer</a>
+      <p class="sign">Happy learning,<br/>The Cadence team</p>
+    </div>
+    <div class="foot">You asked this question on Cadence. <a href="https://cadence.app/settings">Manage email notifications.</a></div>
+    <div class="meta"><span><b>To:</b> Asking Student</span><span><b>CTA:</b> /courses/:slug/lessons/:lessonId</span><span class="tag">tunable email</span></div>
+  </div>
+
+</div>
+</body>
+</html>
