@@ -111,3 +111,15 @@ A Question an Instructor or Platform Admin has replied to, speaking as the cours
 **Notification**:
 A message telling one Student, Instructor, Platform Admin, or Team Admin about something in Cadence they must act on or that materially affects them. A Notification has exactly one recipient.
 _Avoid_: Alert, Message, Alarm
+
+**Transactional Notification**:
+A Notification whose email always sends regardless of preference, because it confirms money moving: a Refund approved or a Refund declined. Exempt from per-type toggles and from Mute.
+_Avoid_: Mandatory email, System email, Receipt
+
+**Notification Preference**:
+A recipient's choice of whether a given Notification type reaches them by email. In-app delivery is always on, so a preference only ever governs the email channel. Set globally per type, and for course-scoped types optionally per course.
+_Avoid_: Setting, Subscription, Opt-out
+
+**Muted**:
+The recipient-level state, set by "Mute all email", that suppresses every tunable Notification email at once while leaving the in-app feed untouched. Transactional Notifications are exempt and still send.
+_Avoid_: Unsubscribed, Disabled, Snoozed
